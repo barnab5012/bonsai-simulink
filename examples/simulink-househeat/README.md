@@ -11,12 +11,6 @@ http://beta.bons.ai
 
 # Pre-requisites to run the Example
 
-We strongly recommend to create a virtual environment using [virtualenv](https://virtualenv.pypa.io/en/stable/installation/)
-
-    pip install virtualenv
-    virtualenv bonsai
-    source bonsai/bin/activate
-
 Install Asynchronous HTTP Client/Server
 
     pip install aiohttp

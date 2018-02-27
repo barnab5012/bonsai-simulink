@@ -11,12 +11,6 @@ http://beta.bons.ai
 
 # Pre-requisites to run the Example
 
-We strongly recommend to create a virtual environment using [virtualenv](https://virtualenv.pypa.io/en/stable/installation/)
-
-    pip install virtualenv
-    virtualenv bonsai
-    source bonsai/bin/activate
-
 Install Asynchronous HTTP Client/Server
 
     pip install aiohttp
@@ -48,7 +42,7 @@ Run the following in the simulink-househeat directory:
 
     ../../coordinator/coordinator --brain=simulink-cartpole
 
-When you are seeing rewards reaching 999 you can stop training. You may need to Ctrl+C to stop in the terminal.
+When you are seeing rewards reaching 1000 you can stop training. You may need to Ctrl+C to stop in the terminal.
 
     bonsai train stop    
 
