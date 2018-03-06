@@ -20,11 +20,16 @@ Both examples are located in the examples folder including detailed step-by-step
 
 ## Prerequisites
 
+- A Bonsai AI platform account - http://bns.ai/2HRC7Ww  
 - Python3
 - Bonsai CLI and SDK (Installation covered in separate README)
 - Asynchronous HTTP Client/Server (Installation covered in separate README)
 - MATLAB Engine API for Python (Installation covered in separate README)
 - MATLAB & Simulink (R2017)
+
+## Sign-Up to Bonsai AI
+
+We provide a 30-day free evaluation. Sign-up here http://bns.ai/2HRC7Ww. No credit card required. 
 
 ## Clone the Project
 
