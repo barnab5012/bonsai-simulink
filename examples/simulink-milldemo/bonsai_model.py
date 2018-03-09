@@ -108,7 +108,8 @@ class Model:
         # 0.01 ^ 0.4 = .158
         # 0.05 ^ 0.4 = .302
         # 0.10 ^ 0.4 = .398
-        self.reward = 1.0 - pow(abs(self.state['delta_x']) + abs(self.state['delta_y']), 0.4)/0.398
+        # 0.20 ^ 0.4 = .525
+        self.reward = 1.0 - pow(abs(self.state['delta_x']) + abs(self.state['delta_y']), 0.4)/0.525
 
         self.terminal = self.reward < 0.0 or self.brain_nsteps >= _STEPLIMIT
 
