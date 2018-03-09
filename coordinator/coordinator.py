@@ -157,14 +157,22 @@ class SimulinkSimulation(Simulator):
         """Start the standard (non-coder) simulation. (Non Simulink Coder)"""
         self.eng.eval(
             "set_param(bdroot, 'SimulationCommand', 'stop')", nargout=0)
-        
+
+
+_last_acts = None
+
 async def _handle_request(request):
     global _model, _config, _action, _state
     global _use_coder
+    global _last_acts
     
     body = await request.text()
     logging.debug("received request: " + body)
-    req = json.loads(body)
+    try:
+        req = json.loads(body)
+    except Exception as ex:
+        print("BAD MSG: " + str(body))
+        sys.exit(1)
     method = req['method']
     params = req['params']
     
@@ -177,6 +185,7 @@ async def _handle_request(request):
             'id': req['id'],
         }
         data = json.dumps(msg)
+        _model.clockdivide_init()
         logging.debug("sending getconfig response: " + data)
         return web.Response(body=data.encode('utf8'))
         
@@ -187,13 +196,21 @@ async def _handle_request(request):
             'reward': reward,
             'terminal': terminal,
         }
-        _state.post(_params)
-        
-        if terminal:
-            acts = []
+
+        if not _model.clockdivide_step():
+            # Reuse the last actions
+            acts = _last_acts
         else:
-            # Wait for an action from the brain.
-            acts = _model.convert_output(_action.wait())
+            # Post the state and get new actions
+            _state.post(_params)
+        
+            if terminal:
+                acts = []
+            else:
+                # Wait for an action from the brain.
+                acts = _model.convert_output(_action.wait())
+
+            _last_acts = acts
 
         # Send the action back to the simulator.
         msg = {

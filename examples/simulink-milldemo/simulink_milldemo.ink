@@ -7,8 +7,8 @@ schema MillDemoState
 end
 
 schema MillDemoAction
-    Float32 {-30.0:30.0} u_x,
-    Float32 {-20.0:20.0} u_y
+    Float32 {-1.0:1.0} u_x,
+    Float32 {-1.0:1.0} u_y
 end
 
 schema MillDemoConfig
