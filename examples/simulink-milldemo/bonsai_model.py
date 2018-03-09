@@ -3,6 +3,8 @@
 import logging
 import math
 
+from collections import deque
+
 _STEPLIMIT = 500
 
 class Model:
@@ -49,6 +51,8 @@ class Model:
         self.state = None
         self.reward = None
         self.terminal = None
+        self.fx_deque = None
+        self.fy_deque = None
 
     def episode_step(self):
         """
@@ -72,11 +76,28 @@ class Model:
         returns (state, reward, terminal).
         """
 
+        # Create recurrence for f_x and f_y.
+        if not self.fx_deque:
+            self.fx_deque = deque([inlist[0] for nn in range(0, 3)])
+        else:
+            self.fx_deque.appendleft(inlist[0])
+            self.fx_deque.pop()
+            
+        if not self.fy_deque:
+            self.fy_deque = deque([inlist[1] for nn in range(0, 3)])
+        else:
+            self.fy_deque.appendleft(inlist[1])
+            self.fy_deque.pop()
+        
         # First map the ordered state list from the simulation into a
         # state dictionary for the brain.
         self.state = {
-            'f_x':		inlist[0],
-            'f_y':		inlist[1],
+            'f0x':		self.fx_deque[0],
+            'f1x':		self.fx_deque[1],
+            'f2x':		self.fx_deque[2],
+            'f0y':		self.fy_deque[0],
+            'f1y':		self.fy_deque[1],
+            'f2y':		self.fy_deque[2],
             'delta_x':		inlist[2],
             'delta_y':		inlist[3],
         }
@@ -89,11 +110,6 @@ class Model:
         # 0.10 ^ 0.4 = .398
         self.reward = 1.0 - pow(abs(self.state['delta_x']) + abs(self.state['delta_y']), 0.4)/0.398
 
-        # Clip negative rewards, this model seems to generate huge
-        # ones sometimes ...
-        if self.reward < -1.0:
-            self.reward = -1.0
-        
         self.terminal = self.reward < 0.0 or self.brain_nsteps >= _STEPLIMIT
 
         return self.state, self.reward, self.terminal
@@ -125,8 +141,8 @@ class Model:
         self.total_reward = 0.0
         logging.info("  itr   tm    u_x   u_y =>         f_x         f_y        dx      dy = t    rwd")
         logging.info("                           %11.1f %11.1f   %7.3f %7.3f" % (
-            self.state['f_x'],
-            self.state['f_y'],
+            self.state['f0x'],
+            self.state['f0y'],
             self.state['delta_x'],
             self.state['delta_y'],
         ))
@@ -146,8 +162,8 @@ class Model:
             self.tstamp,
             self.action['u_x'],
             self.action['u_y'],
-            self.state['f_x'],
-            self.state['f_y'],
+            self.state['f0x'],
+            self.state['f0y'],
             self.state['delta_x'],
             self.state['delta_y'],
             self.terminal,

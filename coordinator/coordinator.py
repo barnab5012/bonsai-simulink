@@ -190,17 +190,18 @@ async def _handle_request(request):
         return web.Response(body=data.encode('utf8'))
         
     elif method == 'step':
-        (state, reward, terminal,) = _model.convert_input(params['state'])
-        _params = {
-            'state': state,
-            'reward': reward,
-            'terminal': terminal,
-        }
-
         if not _model.clockdivide_step():
-            # Reuse the last actions
+            # Simulator cycle only, reuse the last actions.
             acts = _last_acts
         else:
+            # Run a full brain cycle.
+            (state, reward, terminal,) = _model.convert_input(params['state'])
+            _params = {
+                'state': state,
+                'reward': reward,
+                'terminal': terminal,
+            }
+
             # Post the state and get new actions
             _state.post(_params)
         

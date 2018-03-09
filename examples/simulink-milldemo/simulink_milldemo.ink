@@ -1,7 +1,11 @@
 
 schema MillDemoState
-    Float32 f_x,
-    Float32 f_y,
+    Float32 f0x,
+    Float32 f1x,
+    Float32 f2x,
+    Float32 f0y,
+    Float32 f1y,
+    Float32 f2y,
     Float32 delta_x,
     Float32 delta_y
 end
