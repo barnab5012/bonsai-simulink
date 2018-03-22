@@ -93,11 +93,11 @@ class Model:
         # state dictionary for the brain.
         self.state = {
             'f0x':		self.fx_deque[0],
-            'f1x':		self.fx_deque[1],
-            'f2x':		self.fx_deque[2],
+            'f1x':		self.fx_deque[0] - self.fx_deque[1],
+            'f2x':		self.fx_deque[0] - 2*self.fx_deque[1] + self.fx_deque[2],
             'f0y':		self.fy_deque[0],
-            'f1y':		self.fy_deque[1],
-            'f2y':		self.fy_deque[2],
+            'f1y':		self.fy_deque[0] - self.fy_deque[1],
+            'f2y':		self.fy_deque[0] - 2*self.fy_deque[1] + self.fy_deque[2],
             'delta_x':		inlist[2],
             'delta_y':		inlist[3],
         }
