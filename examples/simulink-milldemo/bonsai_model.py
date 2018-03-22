@@ -111,7 +111,7 @@ class Model:
         # 0.20 ^ 0.4 = .525
         self.reward = 1.0 - pow(abs(self.state['delta_x']) + abs(self.state['delta_y']), 0.4)/0.525
 
-        self.terminal = self.reward < 0.0 or self.brain_nsteps >= _STEPLIMIT
+        self.terminal = self.brain_nsteps >= _STEPLIMIT
 
         return self.state, self.reward, self.terminal
 
