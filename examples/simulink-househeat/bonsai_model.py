@@ -3,6 +3,8 @@
 import logging
 import math
 
+_STEPLIMIT = 480
+
 class Model:
     def load(self, eng):
         """
@@ -60,6 +62,9 @@ class Model:
             'outside_temp_change':	inlist[5],
         }
 
+        # Note the tstamp in the logging output.
+        self.tstamp = inlist[6]
+        
         # To compute the reward function value we start by taking the
         # difference between the set point temperature and the actual
         # room temperature.
@@ -83,7 +88,7 @@ class Model:
         # point.
         self.reward = 1.0 - scaled_diff
         
-        self.terminal = self.nsteps >= 240 or self.reward < 0.0
+        self.terminal = self.nsteps >= _STEPLIMIT or self.reward < 0.0
 
         if self.nsteps > 0:
             self.total_reward += self.reward
@@ -107,8 +112,8 @@ class Model:
         Emit a formatted header and initial state line at the beginning
         of each episode.
         """
-        logging.info(" itr h =>    cost  set   troom   droom tout dout = t    rwd")
-        logging.info("          %7.1f %4.1f %7.1f %7.1f %4.1f %4.1f" % (
+        logging.info(" itr  time h =>    cost  set   troom   droom tout dout = t    rwd")
+        logging.info("                %7.1f %4.1f %7.1f %7.1f %4.1f %4.1f" % (
             self.state['heat_cost'],
             self.state['set_temp'],
             self.state['room_temp'],
@@ -126,8 +131,9 @@ class Model:
         else:
             totrwdstr = ""
             
-        logging.info(" %3d %1.0f => %7.1f %4.1f %7.1f %7.1f %4.1f %4.1f = %i %6.3f%s" % (
+        logging.info(" %3d %5.3f %1.0f => %7.1f %4.1f %7.1f %7.1f %4.1f %4.1f = %i %6.3f%s" % (
             self.nsteps,
+            self.tstamp,
             self.action['heater_on'],
             self.state['heat_cost'],
             self.state['set_temp'],

@@ -36,7 +36,7 @@ Run the following in the simulink-househeat directory:
 
     ../../coordinator/coordinator --brain=simulink-househeat
 
-When you are seeing rewards close to 200 you can stop training. You may need to Ctrl+C to stop in the terminal.
+When you are seeing rewards close to 400 you can stop training. You may need to Ctrl+C to stop in the terminal.
 
     bonsai train stop    
 
