@@ -102,6 +102,12 @@ class Model:
         """
         outlist = []
         if act is not None:
+            # Convert estimator range to classifier with comparator.
+            if act['heater_on'] > 0.0:
+                act['heater_on'] = 1.0
+            else:
+                act['heater_on'] = 0.0
+                
             self.action = act
             outlist = [ act['heater_on'], ]
 

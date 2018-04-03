@@ -9,17 +9,20 @@ schema HouseheatState
 end
 
 schema HouseheatAction
-    Float32{ 0.0:1:1.0 } heater_on
+    Float32{-1.0:1.0} heater_on
 end
 
 schema HouseheatConfig
     Float32 outside_phase
 end
 
-concept thermostat is classifier
+concept thermostat is estimator
    predicts (HouseheatAction)
    follows input(HouseheatState)
    feeds output
+   experimental
+      algorithm_ => "TRPO" : "TRPO"
+   end
 end
 
 simulator simulink_sim(HouseheatConfig)
