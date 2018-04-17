@@ -91,13 +91,14 @@ class Model:
         
         # First map the ordered state list from the simulation into a
         # state dictionary for the brain.
+        scale = 1.0 / 1.0e6
         self.state = {
-            'f0x':		self.fx_deque[0],
-            'f1x':		self.fx_deque[0] - self.fx_deque[1],
-            'f2x':		self.fx_deque[0] - 2*self.fx_deque[1] + self.fx_deque[2],
-            'f0y':		self.fy_deque[0],
-            'f1y':		self.fy_deque[0] - self.fy_deque[1],
-            'f2y':		self.fy_deque[0] - 2*self.fy_deque[1] + self.fy_deque[2],
+            'f0x':		(self.fx_deque[0]) * scale,
+            'f1x':		(self.fx_deque[0] - self.fx_deque[1]) * scale,
+            'f2x':		(self.fx_deque[0] - 2*self.fx_deque[1] + self.fx_deque[2]) * scale,
+            'f0y':		(self.fy_deque[0]) * scale,
+            'f1y':		(self.fy_deque[0] - self.fy_deque[1]) * scale,
+            'f2y':		(self.fy_deque[0] - 2*self.fy_deque[1] + self.fy_deque[2]) * scale,
             'delta_x':		inlist[2],
             'delta_y':		inlist[3],
         }
@@ -105,12 +106,13 @@ class Model:
         # Note the tstamp in the logging output.
         self.tstamp = inlist[5]
         
-        # 0.01 ^ 0.4 = .158
-        # 0.05 ^ 0.4 = .302
-        # 0.10 ^ 0.4 = .398
-        # 0.20 ^ 0.4 = .525
-        # 1.00 ^ 0.4 = 1.0
-        self.reward = 1.0 - pow(abs(self.state['delta_x']) + abs(self.state['delta_y']), 0.4)/1.0
+        # 0.01 ^ 0.4 = 0.158
+        # 0.05 ^ 0.4 = 0.302
+        # 0.10 ^ 0.4 = 0.398
+        # 0.20 ^ 0.4 = 0.525
+        # 1.00 ^ 0.4 = 1.000
+        # self.reward = 1.0 - pow(abs(self.state['delta_x']) + abs(self.state['delta_y']), 0.4)/1.000
+        self.reward = 1.0 - pow(abs(self.state['delta_x']) + abs(self.state['delta_y']), 0.4)/0.525
 
         self.terminal = self.reward < 0.0 or self.brain_nsteps >= _STEPLIMIT
 
