@@ -29,7 +29,7 @@ Both examples are located in the examples folder including detailed step-by-step
 
 ## Sign-Up to Bonsai AI
 
-We provide a 30-day free platform evaluation. Sign-up here http://bns.ai/2HRC7Ww. No credit card required. 
+We provide a free platform evaluation license. Sign-up here http://bns.ai/2HRC7Ww. No credit card required. 
 
 ## Clone the Project
 
