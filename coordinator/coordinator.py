@@ -61,6 +61,7 @@ class SimulinkSimulation(Simulator):
         self.episode_started = True
         self.sim_sent_term = False
 
+        _config.reset()
         _state.reset()
         _action.reset()
         
