@@ -65,10 +65,14 @@ class Model:
         Convert the dictionary of config from the brain into an ordered
         list of config for the simulation.
         """
+        dummy = -1.0
         if len(conf) == 0:
             # In prediction mode the brain doesn't supply config.
-            conf['dummy'] = -1.0
-        return [ conf['dummy'], ]
+            conf['s0'] = 0
+            conf['s1'] = 0
+            conf['s2'] = 0
+            conf['s3'] = 0
+        return [ conf['s0'], conf['s1'], conf['s2'], conf['s3'], dummy ]
 
     def convert_input(self, inlist):
         """
@@ -104,7 +108,7 @@ class Model:
         }
 
         # Note the tstamp in the logging output.
-        self.tstamp = inlist[5]
+        self.tstamp = inlist[4]
         
         # 0.01 ^ 0.4 = 0.158
         # 0.05 ^ 0.4 = 0.302
@@ -144,7 +148,7 @@ class Model:
         """
         self.total_reward = 0.0
         logging.info("  itr   tm    u_x   u_y =>         f_x         f_y        dx      dy = t    rwd")
-        logging.info("                           %11.1f %11.1f   %7.3f %7.3f" % (
+        logging.info("                           %11.6f %11.6f   %7.3f %7.3f" % (
             self.state['f0x'],
             self.state['f0y'],
             self.state['delta_x'],
@@ -161,7 +165,7 @@ class Model:
         else:
             totrwdstr = ""
             
-        logging.info(" %4d %5.3f %5.1f %5.1f => %11.1f %11.1f   %7.3f %7.3f = %i %6.3f%s" % (
+        logging.info(" %4d %5.3f %5.1f %5.1f => %11.6f %11.6f   %7.3f %7.3f = %i %6.3f%s" % (
             self.brain_nsteps,
             self.tstamp,
             self.action['u_x'],
