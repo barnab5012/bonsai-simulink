@@ -26,10 +26,6 @@ concept mill is estimator
    predicts (MillDemoAction)
    follows input(MillDemoState)
    feeds output
-   experimental
-      algorithm_ => "TRPO" : "TRPO",
-      hidden_layer_descriptor => "64,'relu';64,'relu';32,'relu';32,'relu';": "HLD"
-   end
 end
 
 simulator simulink_sim(MillDemoConfig)
@@ -37,8 +33,15 @@ simulator simulink_sim(MillDemoConfig)
     state (MillDemoState)
 end
 
+algorithm TRPO_4_Settings
+    is TRPO
+    hidden_layer_size_descriptor => [64, 64, 32, 32],
+    hidden_layer_activation_descriptor => ["relu", "relu", "relu", "relu"]
+end
+
 curriculum my_curriculum
     train mill
+    using algorithm TRPO_4_Settings
     with simulator simulink_sim
     objective milldemo_smooth
         lesson my_first_lesson
