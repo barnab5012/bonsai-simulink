@@ -27,7 +27,8 @@ concept mill is estimator
    follows input(MillDemoState)
    feeds output
    experimental
-      algorithm_ => "TRPO" : "TRPO"
+      algorithm_ => "TRPO" : "TRPO",
+      hidden_layer_descriptor => "64,'relu';64,'relu';32,'relu';32,'relu';": "HLD"
    end
 end
 
