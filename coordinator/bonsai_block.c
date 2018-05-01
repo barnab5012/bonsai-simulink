@@ -197,6 +197,10 @@ bonsai_step(int_T numInputs, real_T *xI, int_T numOutputs, real_T *xO) {
     json_reader_read_member(rsp, "action");
 
     if (json_reader_count_elements(rsp) == 0) {
+        if (g_debug) {
+            fprintf(stderr, "bonsai_step empty action, exiting\n");
+        }
+
         // If the action array is zero sized we are being signaled to terminate.
         exit(0);
     }

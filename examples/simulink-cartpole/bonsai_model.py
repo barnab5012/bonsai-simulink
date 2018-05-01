@@ -18,6 +18,27 @@ class Model:
         """
         return "./simulink_cartpole"
 
+    def clockdivide_init(self):
+        """
+        This method is called at the beginning of each simulator episode.
+        """
+        self.sim_nsteps = 0
+
+    def clockdivide_step(self):
+        """
+        This method is called each time the simulator takes a step.  It
+        should return True if the brain should take this step as well.
+        This routine may be used to divide down the simulation clock
+        by returning true every N steps.  If dividing the simulation
+        clock this routine should return true on the first step of the
+        simulator episode (self.sim_nsteps == 0).
+
+        """
+        # retval = (self.sim_nsteps % 5) == 0
+        retval = True
+        self.sim_nsteps += 1
+        return retval
+
     def episode_init(self):
         """
         This method is called at the beginning of each episode.
