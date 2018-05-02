@@ -37,7 +37,7 @@ Matlab Simscape Multibody Add-On
 
 # Running and Training
 
-Run the following in the simulink-househeat directory:
+Run the following in the simulink-cartpole directory:
 
     bonsai create simulink-cartpole
     bonsai push
