@@ -20,7 +20,10 @@ Install the Bonsai CLI and read our [detailed CLI installation guide](http://doc
     pip install bonsai-cli bonsai-ai bonsai-gym
 
 
-# Install Matlab Engine:
+# Install Matlab Python Engine:
+
+Verify that Matlab and python are both either 32bit or 64bit variants. A mismatch will result
+in failure of setting up the python dependency correctly.
 
     cd <matlabroot>/extern/engines/python
     python setup.py install
