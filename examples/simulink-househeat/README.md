@@ -22,7 +22,7 @@ Install the Bonsai CLI and read our [detailed CLI installation guide](http://doc
 
 # Install Matlab Python Engine:
 
-Verify that Matlab and python are both either 32bit or 64bit variants. A mismatch will result
+Verify that Matlab and python are both either 32-bit or 64-bit variants. A mismatch will result
 in failure of setting up the python dependency correctly.
 
     cd <matlabroot>/extern/engines/python
