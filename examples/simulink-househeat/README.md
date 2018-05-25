@@ -52,7 +52,7 @@ Now you can predict using the trained BRAIN.
 # Files
 
 * `README.md` - This file
-* `bonsai_model.py` - Model interface description
+* `star.py` - Model interface description containing state, terminals, actions, and reward
 * `simulink_househeat.ink` - Inkling file
 * `simulink_househeat.slx` - Simulink model
 * `sldemo_househeat_data.m` - Simulink model data

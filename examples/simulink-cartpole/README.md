@@ -58,7 +58,7 @@ Now you can predict using the trained BRAIN.
 # Model Specific Files
 
 * `README.md` - This file
-* `bonsai_model.py` - Model interface description
+* `star.py` - Model interface description containing state, terminals, actions, and reward
 * `simulink_cartpole.ink` - Inkling file
 * `simulink_cartpole.slx` - Simulink model
 * `preload.m` - Used as a preload function in the Simulink model, to

@@ -2,6 +2,7 @@
 
 import logging
 import math
+from collections import deque
 
 _STEPLIMIT = 480
 
@@ -25,9 +26,12 @@ class Model:
         self.nsteps = 0
         self.action = None
         self.state = None
+        self.logged_state = None
         self.reward = None
         self.terminal = None
         self.total_reward = 0.0
+        empty_observation = [0.0,0.0,0.0,0.0,0.0]
+        self.temperature_difference_history = deque(empty_observation)
 
     def episode_step(self):
         """
@@ -45,7 +49,7 @@ class Model:
             conf['outside_phase'] = 0.0
         return [ conf['outside_phase'], ]
 
-    def convert_input(self, inlist):
+    def convert_input(self, simulator_state):
         """
         Called with a list of inputs from the model,
         returns (state, reward, terminal).
@@ -53,22 +57,39 @@ class Model:
 
         # First map the ordered state list from the simulation into a
         # state dictionary for the brain.
+
+        self.logged_state = {
+            'heat_cost':        simulator_state[0],
+            'set_temp':         simulator_state[1],
+            'room_temp':        simulator_state[2],
+            'room_temp_change':     simulator_state[3],
+            'outside_temp':     simulator_state[4],
+            'outside_temp_change':  simulator_state[5],
+        }
+
+        tdiff = math.fabs(self.logged_state['set_temp'] - self.logged_state['room_temp'])
+        self.temperature_difference_history.appendleft(tdiff)
+        self.temperature_difference_history.pop()
+
+        # First transform the simulation outputs into a state dictionary for the BRAIN.
         self.state = {
-            'heat_cost':		inlist[0],
-            'set_temp':			inlist[1],
-            'room_temp':		inlist[2],
-            'room_temp_change':		inlist[3],
-            'outside_temp':		inlist[4],
-            'outside_temp_change':	inlist[5],
+            'heat_cost':        simulator_state[0],
+            'temperature_difference':           tdiff,
+            'temperature_difference_t1':        self.temperature_difference_history[0],
+            'temperature_difference_t2':        self.temperature_difference_history[1],
+            'temperature_difference_t3':        self.temperature_difference_history[2],
+            'temperature_difference_t4':       self.temperature_difference_history[3],
+            'temperature_difference_t5':       self.temperature_difference_history[4],
+            'outside_temp_change':  simulator_state[5],
         }
 
         # Note the tstamp in the logging output.
-        self.tstamp = inlist[6]
+        self.tstamp = simulator_state[6]
         
         # To compute the reward function value we start by taking the
         # difference between the set point temperature and the actual
         # room temperature.
-        tdiff = math.fabs(self.state['set_temp'] - self.state['room_temp'])
+        tdiff = math.fabs(self.logged_state['set_temp'] - self.logged_state['room_temp'])
 
         # Raise the difference to the 0.4 power.  The non-linear
         # function enhances the reward distribution near the desired
@@ -95,15 +116,22 @@ class Model:
 
         return self.state, self.reward, self.terminal
 
-    def convert_output(self, act):
+    def convert_output(self, brain_action):
         """
         Called with a dictionary of actions from the brain, returns an
         ordered list of outputs for the simulation model.
         """
         outlist = []
-        if act is not None:
-            self.action = act
-            outlist = [ act['heater_on'], ]
+        if brain_action is not None:
+
+            # If you need to clamp the action, for example becuase the TRPO algorithm does not clamp automatically.
+            clamped_action = min(1, max(-1, brain_action['heater_on'])) # clamp to [-1,1] 
+
+            # If you need to scale the action, for example to to [0,1]
+            scaled_action = (clamped_action +2)/2 + 1 # scale to [0,1]
+
+            self.action = brain_action
+            outlist = [ brain_action['heater_on'], ]
 
         return outlist
 
@@ -114,12 +142,12 @@ class Model:
         """
         logging.info(" itr  time h =>    cost  set   troom   droom tout dout = t    rwd")
         logging.info("                %7.1f %4.1f %7.1f %7.1f %4.1f %4.1f" % (
-            self.state['heat_cost'],
-            self.state['set_temp'],
-            self.state['room_temp'],
-            self.state['room_temp_change'],
-            self.state['outside_temp'],
-            self.state['outside_temp_change'],
+            self.logged_state['heat_cost'],
+            self.logged_state['set_temp'],
+            self.logged_state['room_temp'],
+            self.logged_state['room_temp_change'],
+            self.logged_state['outside_temp'],
+            self.logged_state['outside_temp_change'],
         ))
 
     def format_step(self):
@@ -135,14 +163,13 @@ class Model:
             self.nsteps,
             self.tstamp,
             self.action['heater_on'],
-            self.state['heat_cost'],
-            self.state['set_temp'],
-            self.state['room_temp'],
-            self.state['room_temp_change'],
-            self.state['outside_temp'],
-            self.state['outside_temp_change'],
+            self.logged_state['heat_cost'],
+            self.logged_state['set_temp'],
+            self.logged_state['room_temp'],
+            self.logged_state['room_temp_change'],
+            self.logged_state['outside_temp'],
+            self.logged_state['outside_temp_change'],
             self.terminal,
             self.reward,
             totrwdstr,
         ))
-

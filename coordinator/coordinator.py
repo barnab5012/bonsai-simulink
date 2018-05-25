@@ -17,7 +17,7 @@ from datasync import DataSync
 
 sys.path.append('.')
 
-from bonsai_model import Model
+from star import Model
 
 _debug = False
 _use_coder = False

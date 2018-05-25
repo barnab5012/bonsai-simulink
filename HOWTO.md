@@ -46,7 +46,7 @@ SPECIAL NOTE: If you are using a dummy config value you should connect it to an 
 
 ## State, actions, terminal and reward
 
-Based on the ansers to the initial questions, make sure that your Inkling code uses the exact same variable names as you're using in the bonsai_model.py file. Have a look at our examples!
+Based on the answers to the initial questions, make sure that your Inkling code uses the exact same variable names as you're using in the star.py file. Have a look at our examples!
 
 Construct an inkling file for your model.
 - Inkling guide at http://docs.bons.ai/guides/inkling-guide.html
@@ -54,7 +54,7 @@ Construct an inkling file for your model.
 
 ## Finalizing your model
 
-Copy the bonsai_model.py file from one of the existing examples into your directory and update to reflect your model.
+Copy the star.py file from one of the existing examples into your directory and update to reflect your model.
 
 ## Create a Bonsai Brain and start training using your model
 
