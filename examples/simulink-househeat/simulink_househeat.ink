@@ -1,10 +1,12 @@
 
 schema HouseheatState
-    Float32 set_temp,
-    Float32 room_temp,
-    Float32 room_temp_change,
     Float32 heat_cost,
-    Float32 outside_temp,
+    Float32 temperature_difference,
+    Float32 temperature_difference_t1,
+    Float32 temperature_difference_t2,
+    Float32 temperature_difference_t3,
+    Float32 temperature_difference_t4,
+    Float32 temperature_difference_t5,
     Float32 outside_temp_change
 end
 
